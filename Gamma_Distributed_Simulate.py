@@ -23,6 +23,7 @@ def usage():
 	#print "\n"
 	print "-h or --help for help"
 	print "-v or --verbose for verbose"
+	print "-d or --distribution for normal or gamma distribution, if gamma then specify beta
 	print "-s or --size to specify population size/s"
 	print "-n or --number to specify number of loci"
 	print "-l or --loci to specify loci with effects (separated by commas w/ no spaces)"
@@ -57,7 +58,7 @@ def main():
 
 	# Check for arguments passed
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], shortopts="vhs:n:l:e:f:i:m:g:r:", longopts=["verbose", "help", "size=", 
+		opts, args = getopt.getopt(sys.argv[1:], shortopts="vhs:n:l:e:f:i:m:g:r:", longopts=["verbose", "help", "beta", "size=", 
 			"number=", "loci=", "effect=", "mean=", "filename=", "heritability=", "gen=", "rrate="])
 
 	except getopt.GetoptError as err:
@@ -67,6 +68,7 @@ def main():
 
 	verbose = False
 	filename = "my"
+	beta = 100
 	size = 1000
 	number = 100
 	heritability = 0.2
@@ -79,6 +81,11 @@ def main():
 		if o[0] in ("-v", "--verbose"):
 			verbose = True
 			print ("Verbose mode")
+	for o in opts:
+		if o[0] in ("d", "--distribution"):
+			beta = int(o[1])
+			if verbose:
+				print "Gamma distribution will occur with beta:", beta
 	for o in opts:
 		if o[0] in ("-s", "--size"):
 			individuals = o[1].split(",")
@@ -169,7 +176,7 @@ def main():
 		count = 0
 		for each in phenotypes:
 			current_mean = mean[pop.subPopIndPair(count)[0]]
-			x_random.append(random.normalvariate(current_mean + each, sigma))
+			x_random.append(random.gammavariate((current_mean + each)/beta, beta))
 			count += 1
 		r = pearsonr(x_exact, x_random)[0]
 		return r - math.sqrt(h)
