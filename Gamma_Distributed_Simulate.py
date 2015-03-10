@@ -23,7 +23,7 @@ def usage():
 	#print "\n"
 	print "-h or --help for help"
 	print "-v or --verbose for verbose"
-	print "-d or --distribution for normal or gamma distribution, if gamma then specify beta
+	print "-d or --distribution for normal or gamma distribution, if gamma then specify beta"
 	print "-s or --size to specify population size/s"
 	print "-n or --number to specify number of loci"
 	print "-l or --loci to specify loci with effects (separated by commas w/ no spaces)"
