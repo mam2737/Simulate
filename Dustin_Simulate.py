@@ -1,3 +1,4 @@
+## Original Author: Dustin Landers
 import getopt
 import random
 import sys
