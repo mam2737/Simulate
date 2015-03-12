@@ -6,7 +6,7 @@ import math
 from scipy.stats.stats import pearsonr
 import numpy
 import simuPOP as sim
-from simuPOP.utils import export
+from simuPOP.utils import saveCSV
 
 """Functions use somewhere in the software"""
 
@@ -220,8 +220,10 @@ def main():
 	f = open(filename + "_qtrait.txt", "w")
 	f.write("\n".join(map(lambda x: str(x), new_phenotypes)))
 	f.close()
-	numpy.savetxt(filename + '_kt_ote2.txt', numpy.column_stack((loci, numpy.array(effects))))
-	export(pop, format='ped', phenotype='BMI' output=filename + '_genomes.txt')
+
+	numpy.savetxt(filename + "_kt_ote2.txt", numpy.column_stack((loci, numpy.array(effects))))
+
+	saveCSV(pop, filename + "_genomes.csv")
 	print "\n\n"
 
 
