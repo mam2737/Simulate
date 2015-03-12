@@ -6,7 +6,7 @@ import math
 from scipy.stats.stats import pearsonr
 import numpy
 import simuPOP as sim
-from simuPOP.utils import export
+from simuPOP.utils import saveCSV
 
 """Functions use somewhere in the software"""
 
@@ -58,7 +58,7 @@ def main():
 
 	# Check for arguments passed
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], shortopts="vhs:n:l:e:f:i:m:g:r:", longopts=["verbose", "help", "beta", "size=", 
+		opts, args = getopt.getopt(sys.argv[1:], shortopts="vhs:n:l:e:f:i:m:g:r:", longopts=["verbose", "help", "bbeta=", "size=", 
 			"number=", "loci=", "effect=", "mean=", "filename=", "heritability=", "gen=", "rrate="])
 
 	except getopt.GetoptError as err:
@@ -68,7 +68,7 @@ def main():
 
 	verbose = False
 	filename = "my"
-	beta = 100
+	bbeta = 100
 	size = 1000
 	number = 100
 	heritability = 0.2
@@ -85,7 +85,7 @@ def main():
 		if o[0] in ("d", "--distribution"):
 			beta = int(o[1])
 			if verbose:
-				print "Gamma distribution will occur with beta:", beta
+				print "Gamma distribution will occur with beta:", bbeta
 	for o in opts:
 		if o[0] in ("-s", "--size"):
 			individuals = o[1].split(",")
@@ -165,6 +165,7 @@ def main():
 		phenotypes.append(i.qtrait)
 
 	# fun() obtains the heritability equation set to zero for various settings of sigma (standard deviation)
+	#NOTE: May need to tweak gamma distribution parameters to be appropriate for data!
 	def fun(sigma, h):
 		x_exact = list()
 		count = 0
@@ -173,6 +174,7 @@ def main():
 			x_exact.append(current_mean + i)
 			count += 1
 		x_random = list()
+		beta=np.sqrt(current_mean/sigma) #Set up approximate beta variable for gamma distribution
 		count = 0
 		for each in phenotypes:
 			current_mean = mean[pop.subPopIndPair(count)[0]]
@@ -227,8 +229,10 @@ def main():
 	f = open(filename + "_qtrait.txt", "w")
 	f.write("\n".join(map(lambda x: str(x), new_phenotypes)))
 	f.close()
-	numpy.savetxt(filename + '_kt_ote2.txt', numpy.column_stack((loci, numpy.array(effects))))
-	export(pop, format='ped', phenotype='BMI' output=filename + '_genomes.txt')
+
+	numpy.savetxt(filename + "_kt_ote2.txt", numpy.column_stack((loci, numpy.array(effects))))
+
+	saveCSV(pop, filename + "_genomes.csv")
 	print "\n\n"
 
 
