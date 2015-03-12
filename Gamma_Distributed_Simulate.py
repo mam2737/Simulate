@@ -174,11 +174,11 @@ def main():
 			x_exact.append(current_mean + i)
 			count += 1
 		x_random = list()
-		beta=np.sqrt(current_mean/sigma) #Set up approximate beta variable for gamma distribution
+		bbeta=np.sqrt(current_mean/sigma) #Set up approximate beta variable for gamma distribution
 		count = 0
 		for each in phenotypes:
 			current_mean = mean[pop.subPopIndPair(count)[0]]
-			x_random.append(random.gammavariate((current_mean + each)*beta, beta))
+			x_random.append(random.gammavariate((current_mean + each)*bbeta, beta))
 			count += 1
 		r = pearsonr(x_exact, x_random)[0]
 		return r - math.sqrt(h)
