@@ -58,7 +58,7 @@ def main():
 
 	# Check for arguments passed
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], shortopts="vhs:n:l:e:f:i:m:g:r:", longopts=["verbose", "help", "bbeta=", "size=", 
+		opts, args = getopt.getopt(sys.argv[1:], shortopts="vhd:s:n:l:e:f:i:m:g:r:", longopts=["verbose", "help", "bbeta=", "size=", 
 			"number=", "loci=", "effect=", "mean=", "filename=", "heritability=", "gen=", "rrate="])
 
 	except getopt.GetoptError as err:
@@ -83,7 +83,7 @@ def main():
 			print ("Verbose mode")
 	for o in opts:
 		if o[0] in ("d", "--distribution"):
-			beta = int(o[1])
+			beta = float(o[1])
 			if verbose:
 				print "Gamma distribution will occur with beta:", bbeta
 	for o in opts:
@@ -174,11 +174,11 @@ def main():
 			x_exact.append(current_mean + i)
 			count += 1
 		x_random = list()
-		bbeta=np.sqrt(current_mean/sigma) #Set up approximate beta variable for gamma distribution
+		# #Set up approximate beta variable for gamma distribution
 		count = 0
 		for each in phenotypes:
 			current_mean = mean[pop.subPopIndPair(count)[0]]
-			x_random.append(random.gammavariate((current_mean + each)*bbeta, beta))
+			x_random.append(random.gammavariate((current_mean + each)*bbeta, bbeta))
 			count += 1
 		r = pearsonr(x_exact, x_random)[0]
 		return r - math.sqrt(h)
