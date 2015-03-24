@@ -83,7 +83,7 @@ def main():
 			print ("Verbose mode")
 	for o in opts:
 		if o[0] in ("d", "--distribution"):
-			beta = float(o[1])
+			bbeta = float(o[1])
 			if verbose:
 				print "Gamma distribution will occur with beta:", bbeta
 	for o in opts:
