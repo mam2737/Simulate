@@ -23,7 +23,8 @@ def usage():
 	#print "\n"
 	print "-h or --help for help"
 	print "-v or --verbose for verbose"
-	print "-d or --distribution for normal or gamma distribution, if gamma then specify beta"
+	print "-p1 or --parameter1 for alpha"
+	print "-p2 or --parameter2 for beta"
 	print "-s or --size to specify population size/s"
 	print "-n or --number to specify number of loci"
 	print "-l or --loci to specify loci with effects (separated by commas w/ no spaces)"
@@ -58,7 +59,7 @@ def main():
 
 	# Check for arguments passed
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], shortopts="vhd:s:n:l:e:f:i:m:g:r:", longopts=["verbose", "help", "bbeta=", "size=", 
+		opts, args = getopt.getopt(sys.argv[1:], shortopts="vhd:s:n:l:e:f:i:m:g:r:", longopts=["verbose", "help", "parameter1=", "parameter2", "size=", 
 			"number=", "loci=", "effect=", "mean=", "filename=", "heritability=", "gen=", "rrate="])
 
 	except getopt.GetoptError as err:
@@ -68,8 +69,9 @@ def main():
 
 	verbose = False
 	filename = "my"
-	bbeta = 100
 	size = 1000
+	p1 = aalpha = 2
+	p2 = bbeta = 3
 	number = 100
 	heritability = 0.2
 	mean = 2.0
@@ -82,10 +84,15 @@ def main():
 			verbose = True
 			print ("Verbose mode")
 	for o in opts:
-		if o[0] in ("d", "--distribution"):
+		if o[0] in ("-p1", "--parameter1"):
+			aalpha = float(o[1])
+			if verbose:
+				print "Gamma distribution will occur with alpha:", aalpha
+	for o in opts:
+		if o[0] in ("-p2", "--parameter2"):
 			bbeta = float(o[1])
 			if verbose:
-				print "Gamma distribution will occur with beta:", bbeta
+				print "Gamma distribution will occur with beta:", bbeta			
 	for o in opts:
 		if o[0] in ("-s", "--size"):
 			individuals = o[1].split(",")
@@ -174,11 +181,11 @@ def main():
 			x_exact.append(current_mean + i)
 			count += 1
 		x_random = list()
-		# #Set up approximate beta variable for gamma distribution
+		#bbeta=((sigma**2)/current_mean) #Set up approximate beta variable for gamma distribution
 		count = 0
 		for each in phenotypes:
 			current_mean = mean[pop.subPopIndPair(count)[0]]
-			x_random.append(random.gammavariate((current_mean + each)*bbeta, bbeta))
+			x_random.append(random.gammavariate((current_mean + each)/bbeta, (current_mean + each)/aalpha))
 			count += 1
 		r = pearsonr(x_exact, x_random)[0]
 		return r - math.sqrt(h)
