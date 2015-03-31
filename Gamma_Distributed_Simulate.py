@@ -185,7 +185,7 @@ def main():
 		count = 0
 		for each in phenotypes:
 			current_mean = mean[pop.subPopIndPair(count)[0]]
-			x_random.append(random.gammavariate((current_mean + each)/bbeta, (current_mean + each)/aalpha))
+			x_random.append(random.normalvariate(current_mean + each, sigma))
 			count += 1
 		r = pearsonr(x_exact, x_random)[0]
 		return r - math.sqrt(h)
@@ -230,7 +230,7 @@ def main():
 	count = 0
 	for each in phenotypes:
 		current_mean = mean[pop.subPopIndPair(count)[0]]
-		new_phenotypes.append(random.normalvariate(current_mean + each, estimated_variance))
+		new_phenotypes.append(random.gammavariate((current_mean + each)/bbeta, ((estimated_variance/aalpha)**0.5)))
 		count += 1
 
 	f = open(filename + "_qtrait.txt", "w")
