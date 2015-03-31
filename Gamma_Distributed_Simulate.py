@@ -59,7 +59,7 @@ def main():
 
 	# Check for arguments passed
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], shortopts="vhp1:p2:s:n:l:e:f:i:m:g:r:", longopts=["verbose", "help", "parameter1=", "parameter2", "size=", 
+		opts, args = getopt.getopt(sys.argv[1:], shortopts="vhp1:p2:s:n:l:e:f:i:m:g:r:", longopts=["verbose", "help", "parameter1=", "parameter2=", "size=", 
 			"number=", "loci=", "effect=", "mean=", "filename=", "heritability=", "gen=", "rrate="])
 
 	except getopt.GetoptError as err:
