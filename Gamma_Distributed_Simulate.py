@@ -247,10 +247,10 @@ def main():
 	for o in opts:
 		if o[0] in ("-d", "--distribution"):
 			if distribution == 0:
-					for each in phenotypes:
-						current_mean = mean[pop.subPopIndPair(count)[0]]
-						new_phenotypes.append(random.normalvariate(current_mean + each, estimated_variance))
-						count += 1
+				for each in phenotypes:
+					current_mean = mean[pop.subPopIndPair(count)[0]]
+					new_phenotypes.append(random.normalvariate(current_mean + each, estimated_variance))
+					count += 1
 			elif distribution == 1:
 				for each in phenotypes:
 					current_mean = mean[pop.subPopIndPair(count)[0]]
