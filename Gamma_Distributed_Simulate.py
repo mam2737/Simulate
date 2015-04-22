@@ -23,6 +23,7 @@ def usage():
 	#print "\n"
 	print "-h or --help for help"
 	print "-v or --verbose for verbose"
+	print "-d or --distribution choose 0 for normal or 1 for gamma distribution"
 	print "-p1 or --parameter1 for alpha"
 	print "-p2 or --parameter2 for beta"
 	print "-s or --size to specify population size/s"
@@ -59,7 +60,7 @@ def main():
 
 	# Check for arguments passed
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], shortopts="vhp1:p2:s:n:l:e:f:i:m:g:r:", longopts=["verbose", "help", "parameter1=", "parameter2=", "size=", 
+		opts, args = getopt.getopt(sys.argv[1:], shortopts="vhd:p1:p2:s:n:l:e:f:i:m:g:r:", longopts=["verbose", "help", "distribution=", "parameter1=", "parameter2=", "size=", 
 			"number=", "loci=", "effect=", "mean=", "filename=", "heritability=", "gen=", "rrate="])
 
 	except getopt.GetoptError as err:
@@ -83,6 +84,21 @@ def main():
 		if o[0] in ("-v", "--verbose"):
 			verbose = True
 			print ("Verbose mode")
+	for o in opts:
+		if o[0] in ("-d", "--distribution"):
+			distribution = float(o[1])
+			if distribution == 0:	
+				aalpha = "--"
+				bbeta = "--"
+			elif distribution == 1:
+				p1 = aalpha = 2
+				p2 = bbeta = 3
+		if verbose:
+			if distribution == 0
+				print "Normal distribution chosen with population mean ", mean
+			if distribution == 1
+				print "Gamma distribution chosen with alpha "+str(parameter1)" and beta "+str(parameter2)""
+			
 	for o in opts:
 		if o[0] in ("-p1", "--parameter1"):
 			aalpha = float(o[1])
@@ -228,11 +244,18 @@ def main():
 	estimated_variance = newton(p)
 	new_phenotypes = list()
 	count = 0
-	for each in phenotypes:
-		current_mean = mean[pop.subPopIndPair(count)[0]]
-		new_phenotypes.append(random.gammavariate((current_mean + each)/bbeta, ((estimated_variance/aalpha)**0.5)))
-		count += 1
-
+	for o in opts:
+		if o[0] in ("-d", "--distribution"):
+			if distribution == 0:
+					for each in phenotypes:
+						current_mean = mean[pop.subPopIndPair(count)[0]]
+						new_phenotypes.append(random.normalvariate(current_mean + each, estimated_variance))
+						count += 1
+			elif distribution == 1:
+				for each in phenotypes:
+					current_mean = mean[pop.subPopIndPair(count)[0]]
+					new_phenotypes.append(random.gammavariate((current_mean + each)/bbeta, ((estimated_variance/aalpha)**0.5)))
+					count += 1
 	f = open(filename + "_qtrait.txt", "w")
 	f.write("\n".join(map(lambda x: str(x), new_phenotypes)))
 	f.close()
