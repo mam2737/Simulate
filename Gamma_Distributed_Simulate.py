@@ -97,7 +97,7 @@ def main():
 			if distribution == 0
 				print "Normal distribution chosen with population mean ", mean
 			if distribution == 1
-				print "Gamma distribution chosen with alpha "+str(parameter1)" and beta "+str(parameter2)""
+				print "Gamma distribution chosen with alpha "+str(aalpha)" and beta "+str(bbeta)""
 			
 	for o in opts:
 		if o[0] in ("-p1", "--parameter1"):
