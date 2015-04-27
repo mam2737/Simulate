@@ -71,8 +71,6 @@ def main():
 	verbose = False
 	filename = "my"
 	size = 1000
-	p1 = aalpha = 2
-	p2 = bbeta = 3
 	number = 100
 	heritability = 0.2
 	mean = 2.0
