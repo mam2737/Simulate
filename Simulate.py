@@ -6,7 +6,7 @@ import math
 from scipy.stats.stats import pearsonr
 import numpy
 import simuPOP as sim
-from simuPOP.utils import saveCSV
+from simuPOP.utils import saveCSV, export
 
 """Functions use somewhere in the software"""
 
@@ -86,22 +86,25 @@ def main():
 		if o[0] in ("-d", "--distribution"):
 			distribution = float(o[1])
 			if distribution == 0:	
-				aalpha = "--"
-				bbeta = "--"
+				parameter1 = None
+				parameter2 = None
+				if verbose:
+					print "Simulation will occur with Normal Distribution"
 			elif distribution == 1:
-				p1 = aalpha = 2
-				p2 = bbeta = 3
-		if verbose:
-			if distribution == 0
-				print "Normal distribution chosen with population mean ", mean
-			if distribution == 1
-				print "Gamma distribution chosen with alpha "+str(aalpha)" and beta "+str(bbeta)""
-			
-	for o in opts:
-		if o[0] in ("-p1", "--parameter1"):
-			aalpha = float(o[1])
-			if verbose:
-				print "Gamma distribution will occur with alpha:", aalpha
+				if verbose:
+					print "Simulation will occur with Gamma Distribution"
+				for o in opts:
+					if o[0] in ("-p1", "--parameter1"):
+						parameter1 = float(o[1])
+						if verbose:
+							print "Gamma distribution will occur with alpha:", parameter1 
+				for o in opts:
+					if o[0] in ("-p2", "--parameter2"):
+						parameter2 = float(o[1])
+						if verbose:
+							print "Gamma distribution will occur with beta:", parameter2			
+			elif distribution != 0 or distribution != 1:
+				sys.exit("Error message: Distribution option must be either 0 or 1")
 	for o in opts:
 		if o[0] in ("-p2", "--parameter2"):
 			bbeta = float(o[1])
@@ -252,7 +255,7 @@ def main():
 			elif distribution == 1:
 				for each in phenotypes:
 					current_mean = mean[pop.subPopIndPair(count)[0]]
-					new_phenotypes.append(random.gammavariate((current_mean + each)/bbeta, ((estimated_variance/aalpha)**0.5)))
+					new_phenotypes.append(random.gammavariate((current_mean + each)/parameter2, ((estimated_variance/parameter1)**0.5)))
 					count += 1
 	f = open(filename + "_qtrait.txt", "w")
 	f.write("\n".join(map(lambda x: str(x), new_phenotypes)))
@@ -260,7 +263,8 @@ def main():
 
 	numpy.savetxt(filename + "_kt_ote2.txt", numpy.column_stack((loci, numpy.array(effects))))
 
-	saveCSV(pop, filename + "_genomes.csv")
+	export(pop, format='ped', output=filename+'_genomes.ped')
+	export(pop, format='map', output=filename+'_genomes.map')
 	print "\n\n"
 
 
